@@ -4,16 +4,23 @@ from PIL import ImageGrab
 from time import time
 from ultralytics import YOLO
 
+x = 40  # X-coordinate of the top-left corner of the ROI
+y = 164  # Y-coordinate of the top-left corner of the ROI
+width = 1180  # Width of the ROI
+height = 665  # Height of the ROI
+
+
+
 model = YOLO("yolov8n.pt")
 
 l_time = time()
 while(True):
-    screenshot = ImageGrab.grab()
+    screenshot = ImageGrab.grab(bbox=(x, y, x + width, y + height))
     screenshot = np.array(screenshot)
     screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2RGB)
     cv.imshow('cv', screenshot)
 
-    # print('fps {}'.format(1 / (time() - l_time)))
+    print('fps {}'.format(1 / (time() - l_time)))
     # Path to the image you want to detect objects in
     image_path = screenshot
 
