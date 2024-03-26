@@ -10,52 +10,6 @@ y = 164  # Y-coordinate of the top-left corner of the ROI
 width = 1180  # Width of the ROI
 height = 665  # Height of the ROI
 
-def audio( sv,sd):
-    engine = pyttsx3.init(driverName='sapi5')
-    engine.say(f"{sd}")
-
-def win_capture( bbox ):
-    x, y, x2, y2 = bbox
-    w, h = x2 - x, y2 - y
-
-    hwnd = None
-
-    wDC = win32gui.GetWindowDC(hwnd)
-    dcObj = win32ui.CreateDCFromHandle(wDC)
-    cDC = dcObj.CreateCompatibleDC()
-    dataBitMap = win32ui.CreateBitmap()
-    dataBitMap.CreateCompatibleBitmap(dcObj, w, h)
-    cDC.SelectObject(dataBitMap)
-    cDC.BitBlt((0, 0), (w, h), dcObj, (x, y), win32con.SRCCOPY)
-
-    signedIntsArray = dataBitMap.GetBitmapBits(True)
-    img = np.frombuffer(signedIntsArray, dtype='uint8')
-    img.shape = (h, w, 4)
-
-    dcObj.DeleteDC()
-    cDC.DeleteDC()
-    win32gui.ReleaseDC(hwnd, wDC)
-    win32gui.DeleteObject(dataBitMap.GetHandle())
-
-    # Convert RGBA to RGB
-    img = cv.cvtColor(img, cv.COLOR_RGBA2RGB)
-
-    return img
-
-
-
-import cv2 as cv
-import numpy as np
-from time import time
-import pyttsx3
-from ultralytics import YOLO
-import win32ui, win32con, win32gui
-
-x = 40  # X-coordinate of the top-left corner of the ROI
-y = 164  # Y-coordinate of the top-left corner of the ROI
-width = 1180  # Width of the ROI
-height = 665  # Height of the ROI
-
 def audio(text):
     engine = pyttsx3.init(driverName='sapi5')
     engine.say(text)
