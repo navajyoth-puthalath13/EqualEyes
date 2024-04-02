@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from time import time
+from time import time, sleep
 import pyttsx3
 from ultralytics import YOLO
 import win32ui, win32con, win32gui
@@ -15,7 +15,7 @@ def audio(text):
     engine.say(text)
     engine.runAndWait()
 
-def win_capture( bbox ):
+def win_capture(bbox):
     x, y, x2, y2 = bbox
     w, h = x2 - x, y2 - y
 
@@ -84,8 +84,9 @@ def speak_result(num_objects, class_names):
 # Load the YOLO model
 model = YOLO("yolov8n.pt")
 
-l_time = time()
-while True:
+# Loop for processing with 10-second intervals
+for _ in range(100):  # Adjust the number of loops for desired duration
+    l_time = time()
     screenshot = win_capture((x, y, x + width, y + height))
 
     cv.imshow('cv', screenshot)
@@ -103,4 +104,6 @@ while True:
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
-cv.destroyAllWindows()
+    # Sleep for 10 seconds between loops
+    sleep(10)
+
